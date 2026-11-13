@@ -1,0 +1,13 @@
+<!-- Step 1: Parse OpenCanary JSON logs to extract logtype, dst_port, and node_id -->
+<decoder name="json-opencanary">
+  <parent>json</parent>
+  <prematch>"node_id":\s*"opencanary-1"</prematch>
+  <plugin_decoder>JSON_Decoder</plugin_decoder>
+</decoder>
+
+<!-- Step 2: Map OpenCanary's src_host to static srcip for Active Response firewall-drop / netsh -->
+<decoder name="json-opencanary">
+  <parent>json</parent>
+  <regex>"src_host":\s*"(\d+.\d+.\d+.\d+)"</regex>
+  <order>srcip</order>
+</decoder>

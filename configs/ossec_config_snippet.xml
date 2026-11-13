@@ -1,0 +1,39 @@
+<ossec_config>
+  <!-- Whitelist Management & Host IPs to prevent accidental lockout -->
+  <global>
+    <white_list>127.0.0.1</white_list>
+    <white_list>::1</white_list>
+    <white_list>172.26.128.1</white_list>
+  </global>
+
+  <!-- File Integrity Monitoring (FIM) Directories -->
+  <syscheck>
+    <disabled>no</disabled>
+    <directories check_all="yes" realtime="yes">/etc,/usr/bin,/boot</directories>
+  </syscheck>
+
+  <!-- Ingest OpenCanary JSON Logs -->
+  <localfile>
+    <log_format>json</log_format>
+    <location>/var/tmp/opencanary.log</location>
+  </localfile>
+
+  <!-- Active Response 1: Block Attacker IP on Linux Host via iptables -->
+  <active-response>
+    <disabled>no</disabled>
+    <command>firewall-drop</command>
+    <location>local</location>
+    <rules_id>100201,100202,100203</rules_id>
+    <timeout>600</timeout>
+  </active-response>
+
+  <!-- Active Response 2: Block Attacker IP on Windows Agent (001) via netsh -->
+  <active-response>
+    <disabled>no</disabled>
+    <command>netsh</command>
+    <location>defined-agent</location>
+    <agent_id>001</agent_id>
+    <rules_id>100201,100202,100203</rules_id>
+    <timeout>600</timeout>
+  </active-response>
+</ossec_config>

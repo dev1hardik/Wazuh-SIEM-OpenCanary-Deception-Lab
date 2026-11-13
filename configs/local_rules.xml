@@ -1,0 +1,42 @@
+<group name="opencanary,honeypot,deception,">
+
+  <!-- Base Parent Rule: Matches any OpenCanary honeypot event -->
+  <rule id="100200" level="10">
+    <decoded_as>json</decoded_as>
+    <field name="node_id">opencanary-1</field>
+    <description>OpenCanary Honeypot: Suspicious interaction detected from $(src_host)</description>
+  </rule>
+
+  <!-- Rule 1: Fake SSH Login / Brute Force Attempt -->
+  <rule id="100201" level="12">
+    <if_sid>100200</if_sid>
+    <field name="logtype">^4000$|^4001$|^4002$</field>
+    <description>OpenCanary [Fake SSH]: Brute-force or login attempt from $(src_host) on port $(dst_port)</description>
+    <mitre>
+      <id>T1110</id>
+      <id>T1021.004</id>
+    </mitre>
+  </rule>
+
+  <!-- Rule 2: Fake FTP / SMB Probing & Enumeration -->
+  <rule id="100202" level="12">
+    <if_sid>100200</if_sid>
+    <field name="logtype">^2000$|^5000$</field>
+    <description>OpenCanary [Fake FTP/SMB]: Service probing or login attempt from $(src_host) on port $(dst_port)</description>
+    <mitre>
+      <id>T1021.002</id>
+      <id>T1046</id>
+    </mitre>
+  </rule>
+
+  <!-- Rule 3: Fake HTTP Login / Web Recon -->
+  <rule id="100203" level="12">
+    <if_sid>100200</if_sid>
+    <field name="logtype">^3000$|^3001$|^3003$</field>
+    <description>OpenCanary [Fake HTTP]: Web application scan or login attempt from $(src_host) on port $(dst_port)</description>
+    <mitre>
+      <id>T1190</id>
+    </mitre>
+  </rule>
+
+</group>

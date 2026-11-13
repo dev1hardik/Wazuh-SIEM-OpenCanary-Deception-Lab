@@ -1,0 +1,19 @@
+services:
+  opencanary:
+    image: thinkst/opencanary:latest
+    container_name: opencanary
+    restart: unless-stopped
+    network_mode: "host"
+    volumes:
+      - ./data/.opencanary.conf:/root/.opencanary.conf
+      - /var/tmp/opencanary.log:/var/tmp/opencanary.log
+      - /etc/localtime:/etc/localtime:ro
+
+networks:
+  attacker_net:
+    name: attacker_net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+          gateway: 172.18.0.1
